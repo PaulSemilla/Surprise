@@ -38,14 +38,44 @@ export default function App() {
 
   // 🔥 Attempt autoplay immediately on mount (iOS allows silent autoplay)
   useEffect(() => {
+    // helper to fade volume from 0 to 0.25
+    const fadeInVolume = () => {
+      if (!audioRef.current) return;
+      const target = 0.25;
+      const steps = 20;
+      const step = target / steps;
+      audioRef.current.volume = 0;
+
+      let currentStep = 0;
+      const id = setInterval(() => {
+        if (!audioRef.current) {
+          clearInterval(id);
+          return;
+        }
+        currentStep += 1;
+        const nextVol = Math.min(target, audioRef.current.volume + step);
+        audioRef.current.volume = nextVol;
+        if (currentStep >= steps || nextVol >= target) {
+          clearInterval(id);
+        }
+      }, 150); // 150ms * 20 ≈ 3s fade
+    };
+
     const tryAutoplay = async () => {
       if (!audioRef.current) return;
 
       try {
+        audioRef.current.volume = 0;
         await audioRef.current.play();
+        fadeInVolume();
       } catch (e) {
         const tapHandler = () => {
-          audioRef.current.play().catch(() => {});
+          if (!audioRef.current) return;
+          audioRef.current.volume = 0;
+          audioRef.current
+            .play()
+            .then(() => fadeInVolume())
+            .catch(() => {});
           window.removeEventListener("touchend", tapHandler);
         };
         window.addEventListener("touchend", tapHandler);
@@ -157,8 +187,9 @@ export default function App() {
       I am glad that I met you because being with you makes me want to strive to be better, as you deserve the best from me. The only thing I want from now on is to last a lifetime with you.
       You deserve every bit of success that is coming your way, and I'm excited for your future, and all the things that you're about to achieve. I will always be here cheering for you, supporting you, and loving you. I love you so muchmuchmuchmuch!!`,
     ],
-    sister: [`Congrats RN! You did it!! I always knew you would!! Tapos na ang stress at kaba!! Makakatulog ka na ng mahaba haha. So so proud of you!
-`],
+    sister: [
+      `Congrats RN! You did it!! I always knew you would!! Tapos na ang stress at kaba!! Makakatulog ka na ng mahaba haha. So so proud of you!`,
+    ],
     parents: [``],
   };
 
@@ -387,10 +418,10 @@ export default function App() {
         {/* Polaroid Frame for main grad photo */}
         <motion.div
           className="relative mx-auto bg-white shadow-2xl"
-          style={{ 
+          style={{
             width: "260px",
             padding: "12px 12px 50px 12px",
-            borderRadius: "4px"
+            borderRadius: "4px",
           }}
           whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 250 }}
@@ -423,7 +454,7 @@ export default function App() {
             Congratulations!
           </span>
           <span className="block text-2xl md:text-3xl mt-1 bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">
-            Julienne Khrizia Cuevas
+            Julienne Khrizia DC. Cuevas
           </span>
         </motion.h1>
 
@@ -508,8 +539,8 @@ export default function App() {
                 transform: `rotate(${rotations[index]}deg)`,
                 borderRadius: "4px",
               }}
-              whileHover={{ 
-                rotate: rotations[index] + (Math.random() - 0.5) * 5, 
+              whileHover={{
+                rotate: rotations[index] + (Math.random() - 0.5) * 5,
                 scale: 1.12,
                 zIndex: 50,
               }}

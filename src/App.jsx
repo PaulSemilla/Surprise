@@ -3,6 +3,16 @@ import { motion } from "framer-motion";
 import gradPhoto from "./assets/IMG_2129.JPG";
 import music from "./assets/music.mp3";
 
+// Polaroid photos
+import memory1 from "./assets/memory 1.JPG";
+import memory2 from "./assets/memory 2.JPG";
+import memory3 from "./assets/memory 3.JPG";
+import memory4 from "./assets/memory 4.JPG";
+import memory5 from "./assets/memory 5.JPG";
+import memory6 from "./assets/memory 6.JPG";
+import memory7 from "./assets/memory 7.JPG";
+import memory8 from "./assets/memory 8.JPG";
+
 const CONFETTI_COLORS = ["#22c55e", "#4ade80", "#facc15", "#fde68a", "#a3e635"];
 
 export default function App() {
@@ -10,6 +20,13 @@ export default function App() {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [activeTab, setActiveTab] = useState("me");
   const [showExplosion, setShowExplosion] = useState(true);
+
+  // photos array for collage
+  const memoryPhotos = [memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8];
+
+  // rotations & vertical offsets to mimic the sample layout
+  const rotations = [-6, 4, -3, 5, -5, 3, -4, 6];
+  const offsets = [0, 16, -8, 24, 8, -4, 18, 6]; // px
 
   // 🔥 Attempt autoplay immediately on mount (iOS allows silent autoplay)
   useEffect(() => {
@@ -19,7 +36,6 @@ export default function App() {
       try {
         await audioRef.current.play();
       } catch (e) {
-        // iOS blocks until user taps screen — next tap will trigger this:
         const tapHandler = () => {
           audioRef.current.play().catch(() => {});
           window.removeEventListener("touchend", tapHandler);
@@ -29,7 +45,7 @@ export default function App() {
     };
 
     tryAutoplay();
-    
+
     // Hide explosion after animation completes
     const timer = setTimeout(() => setShowExplosion(false), 5000);
     return () => clearTimeout(timer);
@@ -98,7 +114,7 @@ export default function App() {
         key: `firework-${i}`,
         left: `${10 + Math.random() * 80}%`,
         top: `${10 + Math.random() * 60}%`,
-        delay: (i * 0.2) + (Math.random() * 0.3),
+        delay: i * 0.2 + Math.random() * 0.3,
         particles: Array.from({ length: 40 }).map((_, j) => {
           const angle = (j / 40) * Math.PI * 2;
           return {
@@ -129,18 +145,17 @@ export default function App() {
 
   const messages = {
     me: [
-      `Congratulations, Baby! I am so proud of you! The proudest I've ever been. I never had a single doubt in my mind that you could do it. All that hard work and all the stress. Everything finally paid off. 
-      I am glad that I met you because being with you makes me want to strive to be better, as you deserve the best from me. The only thing I want from now on is to last a lifetime with you.
-      You deserve every bit of success that is coming your way, and I'm excited for your future, and all the things that you're about to achieve. I will always be here cheering for you, supporting you, and loving you. I love you so muchmuchmuchmuch!!`,
+      ,
     ],
-    sister: [`Hi Julienne! (Message from your sister goes here 💕)`],
-    parents: [`Dear Julienne, (Message from Mom & Dad goes here 💛)`],
+    sister: [`Congrats RN! You did it!! I always knew you would!! Tapos na ang stress at kaba!! Makakatulog ka na ng mahaba haha. So so proud of you!
+`],
+    parents: [``],
   };
 
   const currentMessageParagraphs = messages[activeTab] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-yellow-700 flex items-center justify-center px-4 md:px-6 lg:px-10 py-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-yellow-700 flex flex-col items-center justify-start px-4 md:px-6 lg:px-10 py-8 relative overflow-hidden">
       {/* MUSIC (autoplays silently on iPad) */}
       <audio ref={audioRef} src={music} loop />
 
@@ -359,7 +374,7 @@ export default function App() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-xl md:max-w-2xl bg-emerald-950/80 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_70px_rgba(0,0,0,0.9)] border border-emerald-700/70 p-7 md:p-9 lg:p-10 text-center overflow-hidden"
       >
-        {/* Polaroid Frame */}
+        {/* Polaroid Frame for main grad photo */}
         <motion.div
           className="relative mx-auto w-[240px] md:w-[260px] lg:w-[280px] bg-white rounded-xl shadow-xl border border-gray-200"
           style={{ padding: "14px 14px 50px 14px" }}
@@ -375,7 +390,7 @@ export default function App() {
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-center w-full">
             <p
               className="text-2xl font-normal text-yellow-700 tracking-wide"
-              style={{ fontFamily: '"Helvetica", cursive' }}
+              style={{ fontFamily: '"Lora", serif' }}
             >
               RN 2025! 💚💛
             </p>
@@ -393,7 +408,7 @@ export default function App() {
             Congratulations!
           </span>
           <span className="block text-2xl md:text-3xl mt-1 bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">
-            Julienne Khrizia Cuevas
+            Julienne Khrizia DC. Cuevas
           </span>
         </motion.h1>
 
@@ -427,7 +442,9 @@ export default function App() {
           transition={{ delay: 0.7 }}
         >
           You made it!{" "}
-          <span className="font-bold text-yellow-300">We are all so proud of you!</span>
+          <span className="font-bold text-yellow-300">
+            We are all so proud of you!
+          </span>
         </motion.p>
 
         {/* Button */}
@@ -456,6 +473,40 @@ export default function App() {
         </motion.div>
       </motion.div>
 
+      {/* PHOTO COLLAGE – POLAROID STYLE, NO TEXT */}
+      <motion.section
+        className="relative z-10 w-full max-w-4xl mt-10 mb-10"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-7">
+          {memoryPhotos.map((src, index) => (
+            <motion.div
+              key={index}
+              className="bg-white rounded-[18px] shadow-xl border border-gray-200 p-2 pb-5 overflow-hidden"
+              style={{
+                width: "120px",
+                marginTop: offsets[index] || 0,
+              }}
+              initial={{ rotate: rotations[index] || 0 }}
+              whileHover={{ rotate: 0, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 250, damping: 18 }}
+            >
+              <div className="rounded-[12px] overflow-hidden h-36 md:h-40">
+                <img
+                  src={src}
+                  alt={`memory ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              {/* blank bottom space to look like polaroid – no text */}
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
       {/* MESSAGE MODAL */}
       {showMessageModal && (
         <motion.div
@@ -479,7 +530,7 @@ export default function App() {
             </motion.button>
 
             <h2 className="relative text-2xl font-black text-yellow-200 text-center mb-6 flex items-center justify-center gap-2">
-               From Loved Ones ❤️
+              From Loved Ones ❤️
             </h2>
 
             {/* Tabs */}
@@ -497,10 +548,10 @@ export default function App() {
                   whileTap={{ scale: 0.95 }}
                 >
                   {tab === "me"
-                    ? "From Me"
+                    ? "From Kervy"
                     : tab === "sister"
-                    ? "From Her Sister"
-                    : "From Her Parents"}
+                    ? "From Ate Dianne"
+                    : "From Mama and Papa"}
                 </motion.button>
               ))}
             </div>

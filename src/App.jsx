@@ -21,12 +21,20 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("me");
   const [showExplosion, setShowExplosion] = useState(true);
 
-  // photos array for collage
-  const memoryPhotos = [memory1, memory2, memory3, memory4, memory5, memory6, memory7, memory8];
+  const memoryPhotos = [
+    memory1,
+    memory2,
+    memory3,
+    memory4,
+    memory5,
+    memory6,
+    memory7,
+    memory8,
+  ];
 
-  // rotations & vertical offsets to mimic the sample layout
-  const rotations = [-6, 4, -3, 5, -5, 3, -4, 6];
-  const offsets = [0, 16, -8, 24, 8, -4, 18, 6]; // px
+  // stronger rotations + vertical offsets to make it look "dropped"
+  const rotations = [-18, 15, -22, 8, -25, 19, -10, 23];
+  const offsets = [15, 80, -10, 95, 40, 10, 65, 30]; // px
 
   // 🔥 Attempt autoplay immediately on mount (iOS allows silent autoplay)
   useEffect(() => {
@@ -145,7 +153,9 @@ export default function App() {
 
   const messages = {
     me: [
-      ,
+      `Congratulations, Baby! I am so proud of you! The proudest I've ever been. I never had a single doubt in my mind that you could do it. All that hard work and all the stress. Everything finally paid off. 
+      I am glad that I met you because being with you makes me want to strive to be better, as you deserve the best from me. The only thing I want from now on is to last a lifetime with you.
+      You deserve every bit of success that is coming your way, and I'm excited for your future, and all the things that you're about to achieve. I will always be here cheering for you, supporting you, and loving you. I love you so muchmuchmuchmuch!!`,
     ],
     sister: [`Congrats RN! You did it!! I always knew you would!! Tapos na ang stress at kaba!! Makakatulog ka na ng mahaba haha. So so proud of you!
 `],
@@ -376,20 +386,25 @@ export default function App() {
       >
         {/* Polaroid Frame for main grad photo */}
         <motion.div
-          className="relative mx-auto w-[240px] md:w-[260px] lg:w-[280px] bg-white rounded-xl shadow-xl border border-gray-200"
-          style={{ padding: "14px 14px 50px 14px" }}
+          className="relative mx-auto bg-white shadow-2xl"
+          style={{ 
+            width: "260px",
+            padding: "12px 12px 50px 12px",
+            borderRadius: "4px"
+          }}
           whileHover={{ scale: 1.03 }}
           transition={{ type: "spring", stiffness: 250 }}
         >
           <img
             src={gradPhoto}
             alt="Julienne Khrizia Cuevas"
-            className="w-full h-auto object-cover rounded-md shadow-md"
+            className="w-full h-auto object-cover"
+            style={{ aspectRatio: "4/5" }}
           />
 
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 text-center w-full">
             <p
-              className="text-2xl font-normal text-yellow-700 tracking-wide"
+              className="text-xl font-normal text-gray-600 tracking-wide"
               style={{ fontFamily: '"Lora", serif' }}
             >
               RN 2025! 💚💛
@@ -408,7 +423,7 @@ export default function App() {
             Congratulations!
           </span>
           <span className="block text-2xl md:text-3xl mt-1 bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">
-            Julienne Khrizia DC. Cuevas
+            Julienne Khrizia Cuevas
           </span>
         </motion.h1>
 
@@ -468,40 +483,47 @@ export default function App() {
           transition={{ delay: 0.9 }}
         >
           <p className="text-xs md:text-sm text-emerald-100 font-semibold flex items-center justify-center gap-2">
-            🏅 Pinakamaangas na nurse sa buong Manila 🏅
+            🏅 Pinakamaangas na Nurse sa buong Manila 🏅
           </p>
         </motion.div>
       </motion.div>
 
-      {/* PHOTO COLLAGE – POLAROID STYLE, NO TEXT */}
+      {/* PHOTO COLLAGE – AUTHENTIC POLAROID STYLE */}
       <motion.section
-        className="relative z-10 w-full max-w-4xl mt-10 mb-10"
+        className="relative z-10 w-full max-w-5xl mt-10 mb-10"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="flex flex-wrap justify-center gap-4 md:gap-6 lg:gap-7">
+        <div className="flex flex-wrap justify-center gap-1 md:gap-2 lg:gap-3">
           {memoryPhotos.map((src, index) => (
             <motion.div
               key={index}
-              className="bg-white rounded-[18px] shadow-xl border border-gray-200 p-2 pb-5 overflow-hidden"
+              className="bg-white shadow-2xl"
               style={{
-                width: "120px",
+                width: "160px",
+                padding: "10px 10px 35px 10px",
                 marginTop: offsets[index] || 0,
+                transform: `rotate(${rotations[index]}deg)`,
+                borderRadius: "4px",
               }}
-              initial={{ rotate: rotations[index] || 0 }}
-              whileHover={{ rotate: 0, scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 250, damping: 18 }}
+              whileHover={{ 
+                rotate: rotations[index] + (Math.random() - 0.5) * 5, 
+                scale: 1.12,
+                zIndex: 50,
+              }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
             >
-              <div className="rounded-[12px] overflow-hidden h-36 md:h-40">
+              <div className="overflow-hidden bg-gray-100">
                 <img
                   src={src}
                   alt={`memory ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto object-cover"
+                  style={{ aspectRatio: "4/5" }}
                 />
               </div>
-              {/* blank bottom space to look like polaroid – no text */}
+              {/* Blank bottom area for authentic polaroid look */}
             </motion.div>
           ))}
         </div>

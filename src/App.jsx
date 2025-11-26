@@ -1,7 +1,6 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import gradPhoto from "./assets/IMG_2129.JPG";
-import music from "./assets/music.mp3";
 
 // Polaroid photos
 import memory1 from "./assets/memory 1.JPG";
@@ -16,7 +15,6 @@ import memory8 from "./assets/memory 8.JPG";
 const CONFETTI_COLORS = ["#22c55e", "#4ade80", "#facc15", "#fde68a", "#a3e635"];
 
 export default function App() {
-  const audioRef = useRef(null);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [activeTab, setActiveTab] = useState("me");
   const [showExplosion, setShowExplosion] = useState(true);
@@ -36,55 +34,8 @@ export default function App() {
   const rotations = [-18, 15, -22, 8, -25, 19, -10, 23];
   const offsets = [15, 80, -10, 95, 40, 10, 65, 30]; // px
 
-  // 🔥 Attempt autoplay immediately on mount (iOS allows silent autoplay)
+  // Hide explosion after animation completes
   useEffect(() => {
-    // helper to fade volume from 0 to 0.25
-    const fadeInVolume = () => {
-      if (!audioRef.current) return;
-      const target = 0.25;
-      const steps = 20;
-      const step = target / steps;
-      audioRef.current.volume = 0;
-
-      let currentStep = 0;
-      const id = setInterval(() => {
-        if (!audioRef.current) {
-          clearInterval(id);
-          return;
-        }
-        currentStep += 1;
-        const nextVol = Math.min(target, audioRef.current.volume + step);
-        audioRef.current.volume = nextVol;
-        if (currentStep >= steps || nextVol >= target) {
-          clearInterval(id);
-        }
-      }, 150); // 150ms * 20 ≈ 3s fade
-    };
-
-    const tryAutoplay = async () => {
-      if (!audioRef.current) return;
-
-      try {
-        audioRef.current.volume = 0;
-        await audioRef.current.play();
-        fadeInVolume();
-      } catch (e) {
-        const tapHandler = () => {
-          if (!audioRef.current) return;
-          audioRef.current.volume = 0;
-          audioRef.current
-            .play()
-            .then(() => fadeInVolume())
-            .catch(() => {});
-          window.removeEventListener("touchend", tapHandler);
-        };
-        window.addEventListener("touchend", tapHandler);
-      }
-    };
-
-    tryAutoplay();
-
-    // Hide explosion after animation completes
     const timer = setTimeout(() => setShowExplosion(false), 5000);
     return () => clearTimeout(timer);
   }, []);
@@ -190,16 +141,20 @@ export default function App() {
     sister: [
       `Congrats RN! You did it!! I always knew you would!! Tapos na ang stress at kaba!! Makakatulog ka na ng mahaba haha. So so proud of you!`,
     ],
-    parents: [``],
+    mama: [
+      `My dearest Olen, as your board exam results approach, remember that these marks can never measure your true talent and hard work. We are so proud of you. Whatever the outcome, you have a bright future ahead. We love you always.
+
+Congratulations on passing your board exam! Your hardwork, dedication, and determination have truly paid off. God has blessed you with success. May he continue to guide you in every step of your journey. We are so proud of you… `,
+    ],
+    papa: [
+      `My dearest daughter, watching you succeed in nursing fills my heart with immense pride. Your compassion and dedication shine brightly. Congratulations on all you've achieved!`,
+    ],
   };
 
   const currentMessageParagraphs = messages[activeTab] || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-yellow-700 flex flex-col items-center justify-start px-4 md:px-6 lg:px-10 py-8 relative overflow-hidden">
-      {/* MUSIC (autoplays silently on iPad) */}
-      <audio ref={audioRef} src={music} loop />
-
       {/* EXPLOSION CONFETTI (on page load) */}
       {showExplosion &&
         explosionConfetti.map((c) => {
@@ -354,7 +309,7 @@ export default function App() {
         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
       />
 
-      {/* CONFETTI */}
+      {/* CONFETTI (idle floating) */}
       {confetti.map((c, index) => (
         <motion.div
           key={c.key}
@@ -393,7 +348,12 @@ export default function App() {
       <motion.div
         className="absolute text-emerald-300 text-5xl"
         animate={{ y: [-15, -50, -15], x: [0, -12, 0], scale: [1, 1.15, 1] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.8,
+        }}
         style={{ left: "84%", bottom: "18%", opacity: 0.75 }}
       >
         🩺
@@ -402,7 +362,12 @@ export default function App() {
       <motion.div
         className="absolute text-yellow-200 text-3xl"
         animate={{ y: [-5, -30, -5], x: [0, 6, 0], scale: [1, 1.1, 1] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
+        transition={{
+          duration: 4.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1.4,
+        }}
         style={{ right: "16%", top: "15%", opacity: 0.8 }}
       >
         🎓
@@ -588,7 +553,7 @@ export default function App() {
 
             {/* Tabs */}
             <div className="relative flex flex-wrap justify-center gap-2 mb-6 text-xs md:text-sm">
-              {["me", "sister", "parents"].map((tab) => (
+              {["me", "sister", "mama", "papa"].map((tab) => (
                 <motion.button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -604,7 +569,9 @@ export default function App() {
                     ? "From Kervy"
                     : tab === "sister"
                     ? "From Ate Dianne"
-                    : "From Mama and Papa"}
+                    : tab === "mama"
+                    ? "From Mama"
+                    : "From Papa"}
                 </motion.button>
               ))}
             </div>

@@ -149,9 +149,27 @@ Congratulations on passing your board exam! Your hardwork, dedication, and deter
     papa: [
       `My dearest daughter, watching you succeed in nursing fills my heart with immense pride. Your compassion and dedication shine brightly. Congratulations on all you've achieved!`,
     ],
+    mommy: [
+      `Congratulations olen lahat ng hirap mo nagkaroon na ng bunga you are now certified nurse thank you sa pag aalaga mo kay nanay ngayn may special nurse na sya masaya kami para sa yo kasi you fulfilled your dream dapat dream higher pa
+`,
+    ],
+    nanay: [
+      ``,
+    ],
   };
 
   const currentMessageParagraphs = messages[activeTab] || [];
+
+  const tabs = ["me", "sister", "mama", "papa", "mommy", "nanay"];
+
+  const tabLabels = {
+    me: "From Kervy",
+    sister: "From Ate Dianne",
+    mama: "From Mama",
+    papa: "From Papa",
+    mommy: "From Mommy",
+    nanay: "From Nanay",
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-yellow-700 flex flex-col items-center justify-start px-4 md:px-6 lg:px-10 py-8 relative overflow-hidden">
@@ -519,7 +537,6 @@ Congratulations on passing your board exam! Your hardwork, dedication, and deter
                   style={{ aspectRatio: "4/5" }}
                 />
               </div>
-              {/* Blank bottom area for authentic polaroid look */}
             </motion.div>
           ))}
         </div>
@@ -553,7 +570,7 @@ Congratulations on passing your board exam! Your hardwork, dedication, and deter
 
             {/* Tabs */}
             <div className="relative flex flex-wrap justify-center gap-2 mb-6 text-xs md:text-sm">
-              {["me", "sister", "mama", "papa"].map((tab) => (
+              {tabs.map((tab) => (
                 <motion.button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -565,13 +582,7 @@ Congratulations on passing your board exam! Your hardwork, dedication, and deter
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {tab === "me"
-                    ? "From Kervy"
-                    : tab === "sister"
-                    ? "From Ate Dianne"
-                    : tab === "mama"
-                    ? "From Mama"
-                    : "From Papa"}
+                  {tabLabels[tab]}
                 </motion.button>
               ))}
             </div>

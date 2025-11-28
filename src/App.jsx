@@ -154,7 +154,17 @@ Congratulations on passing your board exam! Your hardwork, dedication, and deter
 `,
     ],
     nanay: [
-      ``,
+      `If ever something had been lost, don't worry. Good things are waiting for you.
+Be strong and brave. Stick to your studies. We are your family. We will support and pray for you. God is always at your side to guide you.
+
+Now, how some good things await comes true. You now graduated
+Bachelor of Nursing (Cum Laude)
+Pamantasan ng Lungsod ng Maynila.
+
+Congratulations, it's worth of blessings. You passed the Board Exam.
+
+We are happy and proud of you.
+We love you.`,
     ],
   };
 
